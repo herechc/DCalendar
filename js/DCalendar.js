@@ -5,13 +5,13 @@
  * 
  * author:陈汉川
  * 
- * git:https://github.com/xfhxbb/LCalendar
+ * git:https://github.com/herechc/DCalendar
  * 
- * Copyright 2016
+ * Copyright 2018
  * 
  * Licensed under MIT
  * 
- * 最近修改于： 2016-6-12 17:22:20
+ * 创建于： 2018-1-4 09:13:14
  */
 (function (root) {
   var sUserAgent = navigator.userAgent.toLowerCase(),
