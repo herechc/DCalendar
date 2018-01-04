@@ -14,7 +14,7 @@ var calendar = new DCalendar({
 - type: the type for plug,ex: date 
 - throttle: control the slip speed
 - minDate: ex: '1900-1'
-- maxDate: ex:: '2018-1'
+- maxDate: ex: '2018-1'
 
 # todo
 - add type (datetime, time, ym)
