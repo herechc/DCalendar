@@ -1,5 +1,5 @@
 # DCalendar
-A datepicker for plug, not rely anymore, just javascript
+A datepicker of plug, not rely anymore, just javascript
 
 # USE
 ``` javascript
