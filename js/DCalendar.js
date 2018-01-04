@@ -305,21 +305,25 @@
   // 取消
   _.prototype.handleBtn = function(){
     var that = this
-    var result = ''
     
     this.selector('.calendar_cancel').addEventListener("touchend",function(){
       that.domBody.removeChild(that.DcDIV)
     })
     this.selector('.calendar_submit').addEventListener("touchend",function(){
       var hole = that.holeVal()
+      var result = ''
       for(var i in hole){
-        result += hole[i].ele.innerHTML
+        if(hole[i].ele.innerHTML < 10){
+          result += '0' + hole[i].ele.innerHTML
+        }else{
+          result += hole[i].ele.innerHTML
+        }
       }
-      that.dom.value = result
+      var conform = result.replace(/(?=(\d{2}){1,2}$)/g,'-')
+      that.dom.value = conform
       that.domBody.removeChild(that.DcDIV)
     })
   }
-
 
   root.DCalendar = _
 
