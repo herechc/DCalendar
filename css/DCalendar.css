@@ -50,12 +50,14 @@
 .DCalendar .canlendar_block .canlendar_block_mask {
   -webkit-mask: -webkit-linear-gradient(top, #000 50%, rgba(250, 250, 0, 0));
   display: flex;
+  justify-content: space-around;
 }
 
 .DCalendar .canlendar_block .canlendar_block_mask .block_bd {
   position: relative;
   height: 10em;
   font-size: 2.3em;
+  width: 100%;
 }
 
 .DCalendar .canlendar_block .canlendar_block_mask .block_bd .picker_wrap {
@@ -87,13 +89,5 @@
 }
 
 .DCalendar .canlendar_block .canlendar_block_mask .block_first {
-  flex: 4;
-}
-
-.DCalendar .canlendar_block .canlendar_block_mask .block_second {
-  flex: 2;
-}
-
-.DCalendar .canlendar_block .canlendar_block_mask .block_3th {
-  flex: 4;
+  min-width: 26%;
 }

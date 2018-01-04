@@ -29,7 +29,7 @@
   var _ = function DCalendar(options) {
     var that = this;
     //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择
-    this.type = 'date';
+    this.type = options.type || 'date';
     // 月天数
     this.days = 31;
     // 现在时间
@@ -40,6 +40,7 @@
     this.nowHours = this.newDate.getHours()
     this.nowMinutes = this.newDate.getMinutes()
     this.nowSeconds = this.newDate.getSeconds()
+    
     // 节流控制
     this.throttle = options.throttle || 20
     //id
@@ -49,6 +50,9 @@
     this.maxDate = options.maxDate || this.nowYear + '-' + (this.nowMonth + 1)
     this.minDateArr = this.minDate.split('-')
     this.maxDateArr = this.maxDate.split('-')
+    // 年月日数组
+    this.minYear = this.minDateArr[0]
+    this.maxYear = this.maxDateArr[0]
     //body
     this.domBody = document.body
     //id
@@ -68,12 +72,16 @@
     switch (this.type) {
       case 'date':
         this.createDate();
-      // case 'datetime':
-      //   this.createDatetime();
-      // case 'time':
-      //   this.createTime();
-      // case 'ym':
-      //   this.createYm();
+        break;
+      case 'datetime':
+        this.createDatetime();
+        break;
+      case 'time':
+        this.createTime();
+        break;
+      case 'ym':
+        this.createYm();
+        break;
       default:
         break;
     }
@@ -85,22 +93,26 @@
       }
     },200)
     this.handleBtn()
+
+    //绑定事件
+    this.bind('touchstart')
+    this.bind('touchmove')
+    this.bind('touchend')
   }
-  // 创建date模式
-  _.prototype.createDate = function () {
-    var DcDIV,$html;
+  // 创建年月时间dom，重复利用
+  _.prototype.useDateDom = function(){
+    var DcDIV;
+    //年月日
     var domYear = '';
     var domMonth = '';
     var domDay = '';
-    var minYear = this.minDateArr[0]
-    var maxYear = this.maxDateArr[0]
+    var domHours = '';
+    var domMinutes = ''
+
     // 年
-    for(var i = minYear; i <= maxYear; i++){
+    for(var i = this.minYear; i <= this.maxYear; i++){
       domYear += '<div class="year">'+i+'</div>'
     }
-    // 创建DCalendar的dom
-    this.DcDIV = document.createElement("div")
-    this.DcDIV.className = 'DCalendar'
     // 月
     for(var i = 1; i <= 12; i++){
       domMonth += '<div class="month">'+i+'</div>'
@@ -109,6 +121,33 @@
     for(var i = 1; i <= this.days; i++){
       domDay += '<div class="date">'+i+'</div>'
     }
+    //小时
+    for(var i = 0; i <= 24; i++){
+      domHours += '<div class="hours">'+i+'</div>'
+    } 
+    //分钟
+    for(var i = 0; i <= 60;i++){
+      domMinutes += '<div class="minutes">'+i+'</div>'
+    }
+    // 创建DCalendar的dom
+    this.DcDIV = document.createElement("div")
+    this.DcDIV.className = 'DCalendar'
+
+    this.domBody.appendChild(this.DcDIV)
+    return {
+      'domYear':domYear,
+      'domMonth':domMonth,
+      'domDay': domDay,
+      'domHours':domHours,
+      'domMinutes':domMinutes,
+      'domTarget': this.DcDIV
+    }
+  }
+  // 创建date模式
+  _.prototype.createDate = function () {
+    var $html;
+    var domlist = this.useDateDom()
+    
     $html = '<div class="canlendar_mask"></div>' +
     '<div class="canlendar_body">' +
     '<div class="body_head">' +
@@ -135,23 +174,153 @@
     '</div>' +
     ' </div>' +
     '</div>';
-    this.DcDIV.innerHTML = $html
-    this.domBody.appendChild(this.DcDIV)
 
-    var domYearTransHeight = (maxYear - minYear - 2)*2;
+    this.DcDIV.innerHTML = $html
+
+    var domYearTransHeight = (this.maxYear - this.minYear - 2)*2;
     var domMonthTransHeight = (12 - 3)*2;
     var domDateTransHeight = (this.days - 3)*2;
 
     this.innerDom({
       'target':['.year_wrap','.month_wrap','.date_wrap'],
-      'dom':[domYear,domMonth,domDay],
+      'dom':[domlist.domYear,domlist.domMonth,domlist.domDay],
       'trans':[domYearTransHeight,domMonthTransHeight,domDateTransHeight]
     })
+    
+  }
+  //创建createDatetime模式
+  _.prototype.createDatetime = function(){
+    var $html;
+    var domlist = this.useDateDom()
+    
+    $html = '<div class="canlendar_mask"></div>' +
+    '<div class="canlendar_body">' +
+    '<div class="body_head">' +
+    '<span class="calendar_cancel">取消</span>' +
+    '<span class="calendar_submit">确定</span>' +
+    '</div>' +
+    '<div class="canlendar_block">' +
+    ' <div class="canlendar_block_mask">' +
+    ' <div class="block_bd block_first">' +
+    '<div class="picker_wrap year_wrap">' +
+    '</div>' +
+    '<div class="fence">年</div>' +
+    '</div>' +
+    '<div class="block_bd block_second">' +
+    '<div class="picker_wrap month_wrap">' +
+    '</div>' +
+    '<div class="fence">月</div>' +
+    '</div>' +
+    '<div class="block_bd block_3th">' +
+    '<div class="picker_wrap date_wrap">' +
+    '</div>' +
+    '<div class="fence">日</div>' +
+    '</div>' +
+    '<div class="block_bd block_4th">' +
+    '<div class="picker_wrap hours_wrap">' +
+    '</div>' +
+    '<div class="fence">时</div>' +
+    '</div>' +
+    '<div class="block_bd block_5th">' +
+    '<div class="picker_wrap minutes_wrap">' +
+    '</div>' +
+    '<div class="fence">分</div>' +
+    '</div>' +
+    '</div>' +
+    ' </div>' +
+    '</div>';
 
-    //绑定事件
-    this.bind('touchstart')
-    this.bind('touchmove')
-    this.bind('touchend')
+    this.DcDIV.innerHTML = $html
+    
+    var domYearTransHeight = (this.maxYear - this.minYear - 2)*2;
+    var domMonthTransHeight = (12 - 3)*2;
+    var domDateTransHeight = (this.days - 3)*2;
+    var domHoursTransHeight = (24 - 2)*2;
+    var domMinutesTransHeight = (60 - 2)*2;
+
+    this.innerDom({
+      'target':['.year_wrap','.month_wrap','.date_wrap','.hours_wrap','.minutes_wrap'],
+      'dom':[domlist.domYear,domlist.domMonth,domlist.domDay,domlist.domHours,domlist.domMinutes],
+      'trans':[domYearTransHeight,domMonthTransHeight,domDateTransHeight,domHoursTransHeight,domMinutesTransHeight]
+    })
+    
+
+  }
+  //创建time模式
+  _.prototype.createTime = function(){
+    var $html;
+    var domlist = this.useDateDom()
+    
+    $html = '<div class="canlendar_mask"></div>' +
+    '<div class="canlendar_body">' +
+    '<div class="body_head">' +
+    '<span class="calendar_cancel">取消</span>' +
+    '<span class="calendar_submit">确定</span>' +
+    '</div>' +
+    '<div class="canlendar_block">' +
+    ' <div class="canlendar_block_mask">' +
+    ' <div class="block_bd block_first">' +
+    '<div class="picker_wrap hours_wrap">' +
+    '</div>' +
+    '<div class="fence">时</div>' +
+    '</div>' +
+    '<div class="block_bd block_second">' +
+    '<div class="picker_wrap minutes_wrap">' +
+    '</div>' +
+    '<div class="fence">分</div>' +
+    '</div>' +
+    '</div>' +
+    ' </div>' +
+    '</div>';
+
+    this.DcDIV.innerHTML = $html
+
+    var domHoursTransHeight = (24 - 2)*2;
+    var domMinutesTransHeight = (60 - 2)*2;
+
+    this.innerDom({
+      'target':['.hours_wrap','.minutes_wrap'],
+      'dom':[domlist.domHours,domlist.domMinutes],
+      'trans':[domHoursTransHeight,domMinutesTransHeight]
+    })
+  }
+  //创建ym模式
+  _.prototype.createYm = function(){
+    var $html;
+    var domlist = this.useDateDom()
+    
+    $html = '<div class="canlendar_mask"></div>' +
+    '<div class="canlendar_body">' +
+    '<div class="body_head">' +
+    '<span class="calendar_cancel">取消</span>' +
+    '<span class="calendar_submit">确定</span>' +
+    '</div>' +
+    '<div class="canlendar_block">' +
+    ' <div class="canlendar_block_mask">' +
+    ' <div class="block_bd block_first">' +
+    '<div class="picker_wrap year_wrap">' +
+    '</div>' +
+    '<div class="fence">年</div>' +
+    '</div>' +
+    '<div class="block_bd block_second">' +
+    '<div class="picker_wrap month_wrap">' +
+    '</div>' +
+    '<div class="fence">月</div>' +
+    '</div>' +
+    '</div>' +
+    ' </div>' +
+    '</div>';
+
+    this.DcDIV.innerHTML = $html
+
+    var domYearTransHeight = (this.maxYear - this.minYear - 2)*2;
+    var domMonthTransHeight = (12 - 3)*2;
+
+    this.innerDom({
+      'target':['.year_wrap','.month_wrap'],
+      'dom':[domlist.domYear,domlist.domMonth],
+      'trans':[domYearTransHeight,domMonthTransHeight]
+    })
   }
   // 设置位移
   _.prototype.setTranslate = function(ele,val){
@@ -319,7 +488,7 @@
           result += hole[i].ele.innerHTML
         }
       }
-      var conform = result.replace(/(?=(\d{2}){1,2}$)/g,'-')
+      var conform = result.replace(/(?=(\d{2}){1}$)/g,'-')
       that.dom.value = conform
       that.domBody.removeChild(that.DcDIV)
     })
