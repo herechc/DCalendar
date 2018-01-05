@@ -1,21 +1,17 @@
 # DCalendar
 A datepicker of plug, not rely anymore, just javascript
 
-# USE
+# Documentation
 ``` javascript
+
 var calendar = new DCalendar({
-  id: '#demo'
+  id: '#demo',
+  type: 'date',//default:date. other: datetime, time, ym
+  throttle: 20,//control the slip speed
+  minDate: '1900-1', // set min date
+  maxDate: '1900-1' // set max date
 })
+
 ```
-
-# API
-
-- id: must,the id or className for 'input';
-- type: the type for plug,ex: date 
-- throttle: control the slip speed
-- minDate: ex: '1900-1'
-- maxDate: ex: '2018-1'
-
 # todo
-- add type (datetime, time, ym)
 - use for pc and mobile
