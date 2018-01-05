@@ -63,11 +63,14 @@
       return
     }
     //初始化
+    that.init()
+
     this.dom.addEventListener('touchend',function(){
-      that.init()
+      that.show()
     })
   }
   _.prototype.init = function () {
+    this.createDom()
     var that = this;
     switch (this.type) {
       case 'date':
@@ -85,19 +88,68 @@
       default:
         break;
     }
-    //定时器
-    var transTime = setInterval(function(){
-      if(that.selector('.DCalendar')){
-        that.selector('.canlendar_body').style['WebkitTransform'] = 'translate3d(0,0,0)'
-        clearInterval(transTime)
-      }
-    },200)
+   
     this.handleBtn()
 
     //绑定事件
     this.bind('touchstart')
     this.bind('touchmove')
     this.bind('touchend')
+  }
+  //初始化dom数
+  _.prototype.createDom = function(){
+    var $html;
+    var domlist = this.useDateDom()
+    $html = '<div class="canlendar_mask"></div>' +
+    '<div class="canlendar_body">' +
+    '<div class="body_head">' +
+    '<span class="calendar_cancel">取消</span>' +
+    '<span class="calendar_submit">确定</span>' +
+    '</div>' +
+    '<div class="canlendar_block">' +
+    ' <div class="canlendar_block_mask">' +
+    ' <div class="block_bd block_first">' +
+    '<div class="picker_wrap year_wrap">' +
+    '</div>' +
+    '<div class="fence">年</div>' +
+    '</div>' +
+    '<div class="block_bd block_second">' +
+    '<div class="picker_wrap month_wrap">' +
+    '</div>' +
+    '<div class="fence">月</div>' +
+    '</div>' +
+    '<div class="block_bd block_3th">' +
+    '<div class="picker_wrap date_wrap">' +
+    '</div>' +
+    '<div class="fence">日</div>' +
+    '</div>' +
+    '<div class="block_bd block_4th">' +
+    '<div class="picker_wrap hours_wrap">' +
+    '</div>' +
+    '<div class="fence">时</div>' +
+    '</div>' +
+    '<div class="block_bd block_5th">' +
+    '<div class="picker_wrap minutes_wrap">' +
+    '</div>' +
+    '<div class="fence">分</div>' +
+    '</div>' +
+    '</div>' +
+    ' </div>' +
+    '</div>';
+    this.DcDIV.innerHTML = $html
+
+    var domYearTransHeight = (this.maxYear - this.minYear - 2)*2;
+    var domMonthTransHeight = (12 - 3)*2;
+    var domDateTransHeight = (this.days - 3)*2;
+    var domHoursTransHeight = (24 - 2)*2;
+    var domMinutesTransHeight = (60 - 2)*2;
+
+    this.innerDom({
+      'target':['.year_wrap','.month_wrap','.date_wrap','.hours_wrap','.minutes_wrap'],
+      'dom':[domlist.domYear,domlist.domMonth,domlist.domDay,domlist.domHours,domlist.domMinutes],
+      'trans':[domYearTransHeight,domMonthTransHeight,domDateTransHeight,domHoursTransHeight,domMinutesTransHeight]
+    })
+
   }
   // 创建年月时间dom，重复利用
   _.prototype.useDateDom = function(){
@@ -143,202 +195,55 @@
       'domTarget': this.DcDIV
     }
   }
+  // dom显示~隐藏
+  _.prototype.toggle = function(cls,toggle){
+    if(!cls) return;
+    if(cls.length){
+      if(Object.prototype.toString.call(cls) === '[object Array]'){
+        for(var i = 0; i < cls.length; i++){
+          this.selector(cls[i]).style.display = toggle
+        }
+      } else {
+        this.selector(cls)
+      }
+    } else {
+      cls.style.display = toggle
+    }
+  }
   // 创建date模式
   _.prototype.createDate = function () {
-    var $html;
-    var domlist = this.useDateDom()
-    
-    $html = '<div class="canlendar_mask"></div>' +
-    '<div class="canlendar_body">' +
-    '<div class="body_head">' +
-    '<span class="calendar_cancel">取消</span>' +
-    '<span class="calendar_submit">确定</span>' +
-    '</div>' +
-    '<div class="canlendar_block">' +
-    ' <div class="canlendar_block_mask">' +
-    ' <div class="block_bd block_first">' +
-    '<div class="picker_wrap year_wrap">' +
-    '</div>' +
-    '<div class="fence">年</div>' +
-    '</div>' +
-    '<div class="block_bd block_second">' +
-    '<div class="picker_wrap month_wrap">' +
-    '</div>' +
-    '<div class="fence">月</div>' +
-    '</div>' +
-    '<div class="block_bd block_3th">' +
-    '<div class="picker_wrap date_wrap">' +
-    '</div>' +
-    '<div class="fence">日</div>' +
-    '</div>' +
-    '</div>' +
-    ' </div>' +
-    '</div>';
-
-    this.DcDIV.innerHTML = $html
-
-    var domYearTransHeight = (this.maxYear - this.minYear - 2)*2;
-    var domMonthTransHeight = (12 - 3)*2;
-    var domDateTransHeight = (this.days - 3)*2;
-
-    this.innerDom({
-      'target':['.year_wrap','.month_wrap','.date_wrap'],
-      'dom':[domlist.domYear,domlist.domMonth,domlist.domDay],
-      'trans':[domYearTransHeight,domMonthTransHeight,domDateTransHeight]
-    })
-    
+    this.toggle(['.block_4th','.block_5th'],"none")
   }
-  //创建createDatetime模式
+  //创建Datetime模式
   _.prototype.createDatetime = function(){
-    var $html;
-    var domlist = this.useDateDom()
-    
-    $html = '<div class="canlendar_mask"></div>' +
-    '<div class="canlendar_body">' +
-    '<div class="body_head">' +
-    '<span class="calendar_cancel">取消</span>' +
-    '<span class="calendar_submit">确定</span>' +
-    '</div>' +
-    '<div class="canlendar_block">' +
-    ' <div class="canlendar_block_mask">' +
-    ' <div class="block_bd block_first">' +
-    '<div class="picker_wrap year_wrap">' +
-    '</div>' +
-    '<div class="fence">年</div>' +
-    '</div>' +
-    '<div class="block_bd block_second">' +
-    '<div class="picker_wrap month_wrap">' +
-    '</div>' +
-    '<div class="fence">月</div>' +
-    '</div>' +
-    '<div class="block_bd block_3th">' +
-    '<div class="picker_wrap date_wrap">' +
-    '</div>' +
-    '<div class="fence">日</div>' +
-    '</div>' +
-    '<div class="block_bd block_4th">' +
-    '<div class="picker_wrap hours_wrap">' +
-    '</div>' +
-    '<div class="fence">时</div>' +
-    '</div>' +
-    '<div class="block_bd block_5th">' +
-    '<div class="picker_wrap minutes_wrap">' +
-    '</div>' +
-    '<div class="fence">分</div>' +
-    '</div>' +
-    '</div>' +
-    ' </div>' +
-    '</div>';
-
-    this.DcDIV.innerHTML = $html
-    
-    var domYearTransHeight = (this.maxYear - this.minYear - 2)*2;
-    var domMonthTransHeight = (12 - 3)*2;
-    var domDateTransHeight = (this.days - 3)*2;
-    var domHoursTransHeight = (24 - 2)*2;
-    var domMinutesTransHeight = (60 - 2)*2;
-
-    this.innerDom({
-      'target':['.year_wrap','.month_wrap','.date_wrap','.hours_wrap','.minutes_wrap'],
-      'dom':[domlist.domYear,domlist.domMonth,domlist.domDay,domlist.domHours,domlist.domMinutes],
-      'trans':[domYearTransHeight,domMonthTransHeight,domDateTransHeight,domHoursTransHeight,domMinutesTransHeight]
-    })
-    
-
+    console.log('default')
   }
   //创建time模式
   _.prototype.createTime = function(){
-    var $html;
-    var domlist = this.useDateDom()
-    
-    $html = '<div class="canlendar_mask"></div>' +
-    '<div class="canlendar_body">' +
-    '<div class="body_head">' +
-    '<span class="calendar_cancel">取消</span>' +
-    '<span class="calendar_submit">确定</span>' +
-    '</div>' +
-    '<div class="canlendar_block">' +
-    ' <div class="canlendar_block_mask">' +
-    ' <div class="block_bd block_first">' +
-    '<div class="picker_wrap hours_wrap">' +
-    '</div>' +
-    '<div class="fence">时</div>' +
-    '</div>' +
-    '<div class="block_bd block_second">' +
-    '<div class="picker_wrap minutes_wrap">' +
-    '</div>' +
-    '<div class="fence">分</div>' +
-    '</div>' +
-    '</div>' +
-    ' </div>' +
-    '</div>';
-
-    this.DcDIV.innerHTML = $html
-
-    var domHoursTransHeight = (24 - 2)*2;
-    var domMinutesTransHeight = (60 - 2)*2;
-
-    this.innerDom({
-      'target':['.hours_wrap','.minutes_wrap'],
-      'dom':[domlist.domHours,domlist.domMinutes],
-      'trans':[domHoursTransHeight,domMinutesTransHeight]
-    })
+    this.toggle(['.block_first','.block_second','.block_3th'],"none")
   }
   //创建ym模式
   _.prototype.createYm = function(){
-    var $html;
-    var domlist = this.useDateDom()
-    
-    $html = '<div class="canlendar_mask"></div>' +
-    '<div class="canlendar_body">' +
-    '<div class="body_head">' +
-    '<span class="calendar_cancel">取消</span>' +
-    '<span class="calendar_submit">确定</span>' +
-    '</div>' +
-    '<div class="canlendar_block">' +
-    ' <div class="canlendar_block_mask">' +
-    ' <div class="block_bd block_first">' +
-    '<div class="picker_wrap year_wrap">' +
-    '</div>' +
-    '<div class="fence">年</div>' +
-    '</div>' +
-    '<div class="block_bd block_second">' +
-    '<div class="picker_wrap month_wrap">' +
-    '</div>' +
-    '<div class="fence">月</div>' +
-    '</div>' +
-    '</div>' +
-    ' </div>' +
-    '</div>';
-
-    this.DcDIV.innerHTML = $html
-
-    var domYearTransHeight = (this.maxYear - this.minYear - 2)*2;
-    var domMonthTransHeight = (12 - 3)*2;
-
-    this.innerDom({
-      'target':['.year_wrap','.month_wrap'],
-      'dom':[domlist.domYear,domlist.domMonth],
-      'trans':[domYearTransHeight,domMonthTransHeight]
-    })
+    this.toggle(['.block_3th','.block_4th','.block_5th'],"none")
   }
   // 设置位移
   _.prototype.setTranslate = function(ele,val){
-    if(!ele) return;
-    if(ele.length && typeof(ele) != 'string'){
-      for(var i = 0; i < ele.length; i++){
-        this.selector(ele[i]).style.WebkitTransform ='translate3d(0, -'+val[i]+'em,0)'
-        this.selector(ele[i]).setAttribute('top', -val[i])
-        this.selector(ele[i])['old_top'] = -val[i]
+    var _ele = ele
+    if(!_ele) return;
+    if(_ele.length && typeof(_ele) != 'string'){
+      for(var i = 0; i < _ele.length; i++){
+        this.selector(_ele[i]).style.WebkitTransform ='translate3d(0, -'+val[i]+'em,0)'
+        this.selector(_ele[i]).setAttribute('top', -val[i])
+        this.selector(_ele[i])['old_top'] = -val[i]
       }
     }else{
-      if(typeof(ele) == 'string'){
-        this.selector(ele).style.WebkitTransform ='translate3d(0, -'+val+'em,0)'
-        this.selector(ele).setAttribute('top', -val)
-        this.selector(ele)['old_top'] = -val
+      if(typeof(_ele) == 'string'){
+        this.selector(_ele).style.WebkitTransform ='translate3d(0, -'+val+'em,0)'
+        this.selector(_ele).setAttribute('top', -val)
+        this.selector(_ele)['old_top'] = -val
       }else{
-        ele.style.WebkitTransform ='translate3d(0, '+val+'em,0)'
-        ele.setAttribute('top', val)
+        _ele.style.WebkitTransform ='translate3d(0, '+val+'em,0)'
+        _ele.setAttribute('top', val)
       }
     }
   }
@@ -360,10 +265,11 @@
         break;  
     }
   }
+  //绑定事件
   _.prototype.bind = function(type,bubble){
     document.body.addEventListener(type,this,!!bubble)
   }
-  // 手指事件
+  // 手指事件-触摸开始
   _.prototype.handleStart = function(e){
     var target = e.target.parentNode
     if(!target.classList.contains('picker_wrap')) return;
@@ -371,6 +277,7 @@
     //old_y起始值
     target['old_y'] = point.screenY;
   }
+  // 手指事件-触摸移动
   _.prototype.handleMove = function(e){
     var moveY
     var target = e.target.parentNode
@@ -384,6 +291,7 @@
     this.setTranslate(target,moveY)
     target['old_y'] = target['move_y']
   }
+  // 手指事件-触摸结束
   _.prototype.handleEnd = function(e){
     var target = e.target.parentNode
     if(!target.classList.contains('picker_wrap')) return;
@@ -419,20 +327,23 @@
   }
   //插入dom
   _.prototype.innerDom = function(opt){
-    if(!opt.target) return;
-    if(Object.prototype.toString.call(opt.target) === '[object Array]'){
-      for(var i = 0; i < opt.target.length; i++){
-        this.selector(opt.target[i]).innerHTML = opt.dom[i]
+    var len = opt.target.length
+    if(opt.target && opt.dom){
+      if(Object.prototype.toString.call(opt.target) === '[object Array]'){
+        for(var i = 0; i < len; i++){
+          this.selector(opt.target[i]).innerHTML = opt.dom[i]
+        }
+      }else{
+        this.selector(opt.target).innerHTML = opt.dom
       }
-    }else{
-      this.selector(opt.target).innerHTML = opt.dom
     }
-    if(opt.trans){
+    if(opt.target && opt.trans){
       this.setTranslate(opt.target,opt.trans)
     }
   }
   //滚动结束触发
   _.prototype.rollTrigger = function(e){
+    var dateDom = this.selector('.date_wrap').childNodes
     if(e.classList.contains("date_wrap")) return;
     var hole = this.holeVal()
     if(this.type == 'date'){
@@ -442,27 +353,38 @@
       // 获取多少天
       var day = (new Date(year,month,0)).getDate()
       // 日
-      for(var i = 1; i <= day; i++){
-        domDay += '<div class="date">'+i+'</div>'
+      for(var i = 0; i < day; i++){
+        this.toggle(dateDom[i],'block')
       }
+      for(var i = day; i < dateDom.length; i++){
+        this.toggle(dateDom[i],'none')
+      }
+      
       var trans = (day - 3) * 2
       
       this.innerDom({
         'target':'.date_wrap',
-        'dom': domDay,
+        'dom': null,
         'trans': trans
       })
     }
   }
-
   // 框里面的值
   _.prototype.holeVal = function(){
     var result = {};
     var pos = 0;
     var targetChild;
+    var filter = []
     var targetArr = document.querySelectorAll(".picker_wrap")
-    for(var i = 0; i < targetArr.length; i++){
-      var _target =  targetArr[i]
+    for(var j = 0; j < targetArr.length; j++){
+      var node = targetArr[j].parentNode
+      if(node.style.display != 'none'){
+        filter.push(targetArr[j])
+      }
+    }
+    
+    for(var i = 0; i < filter.length; i++){
+      var _target =  filter[i]
       var top = _target.getAttribute('top')
       var childs = _target.childNodes
       pos = parseInt((top - 4) / -2)
@@ -476,7 +398,7 @@
     var that = this
     
     this.selector('.calendar_cancel').addEventListener("touchend",function(){
-      that.domBody.removeChild(that.DcDIV)
+      that.hide()
     })
     this.selector('.calendar_submit').addEventListener("touchend",function(){
       var hole = that.holeVal()
@@ -490,10 +412,26 @@
       }
       var conform = result.replace(/(?=(\d{2}){1}$)/g,'-')
       that.dom.value = conform
-      that.domBody.removeChild(that.DcDIV)
+      that.hide()
     })
   }
-
+  //显示
+  _.prototype.show = function(){
+    var that = this;
+    this.DcDIV.style.display = 'block'
+    //定时器
+    var transTime = setInterval(function(){
+      if(that.selector('.DCalendar')){
+        that.selector('.canlendar_body').style['WebkitTransform'] = 'translate3d(0,0,0)'
+        clearInterval(transTime)
+      }
+    },80)
+  }
+  //隐藏
+  _.prototype.hide = function(){
+    this.DcDIV.style.display = 'none'
+    this.selector('.canlendar_body').style['WebkitTransform'] = 'translate3d(0,100%,0)'
+  }
   root.DCalendar = _
 
 })(window)
