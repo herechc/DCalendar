@@ -1,11 +1,11 @@
-const path = require("pth")
-
-
-
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const path = require("path");
+const src = path.join(__dirname, 'src')
 module.exports = {
   context: src,
   entry: {
-   dcalendar: './js/DCalendar.js'
+   dcalendar: './js/app.js'
   },
   output: {
     filename: '[name].js',
@@ -14,24 +14,41 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        use:[
-          'eslint-loader'
-        ],
-        include: src
-      },
+      // {
+      //   test: /\.js$/,
+      //   use:[
+      //     'eslint-loader'
+      //   ],
+      //   include: src
+      // },
       {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader?url=false!postcss-loader!sass-loader'
+          use: [
+            {
+              loader: 'css-loader',
+              options:{
+                minimize:true,
+                url: false
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {}
+            },
+            {
+              loader: 'sass-loader',
+              options: {}
+            }
+          ]
         }),
         include: src
       }
     ]
   },
   plugins: [
-    new 
+    new ExtractTextPlugin('../css/DCalendar.css'),
+    new UglifyJsPlugin()
   ]
 }
