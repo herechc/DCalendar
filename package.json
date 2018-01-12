@@ -1,0 +1,29 @@
+{
+  "name": "dclendar",
+  "version": "1.0.0",
+  "description": "A datepicker of plug, not rely anymore, Expansibility Edit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/herechc/DCalendar.git"
+  },
+  "keywords": [
+    "timepick",
+    "extendpick",
+    "mobile",
+    "pc"
+  ],
+  "author": "herec",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/herechc/DCalendar/issues"
+  },
+  "homepage": "https://github.com/herechc/DCalendar#readme",
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "webpack": "^3.10.0"
+  }
+}
