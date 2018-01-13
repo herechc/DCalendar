@@ -56,11 +56,22 @@
 <body>
   <input type="text" readonly id="demo">
 </body>
+<!--    引入去jquery  -->
 <script src="./static/js/DCalendar.js"></script>
 <script>
+
   var dc = new DCalendar({
     id: '#demo',
-    type: 'datetime'
+    type: 'pick',
+    name: '区域',
+    dataUrl: '../src/js/area.json',
+    autoFill:true,
+    triggerFn:function(){
+      console.log('11')
+    },
+    cancelFn:function(){
+      console.log('取消')
+    },
   })
 </script>
 </html>

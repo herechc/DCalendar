@@ -60,7 +60,18 @@
 <script>
   var dc = new DCalendar({
     id: '#demo',
-    type: 'datetime'
+    type: 'pick',
+    // trigger:'#li_category',
+    name: '分类',
+    extend: {
+      data:[["test","tes2","test3","tes3"],["12","22","33","tes3"]]
+    },
+    triggerFn:function(){
+      console.log('11')
+    },
+    cancelFn:function(){
+      console.log('取消')
+    },
   })
 </script>
 </html>

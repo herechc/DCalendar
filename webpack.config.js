@@ -1,5 +1,6 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const CleanPlugin = require("clean-webpack-plugin")
 const path = require("path");
 const src = path.join(__dirname, 'src')
 module.exports = {
@@ -48,6 +49,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanPlugin('static')
     new ExtractTextPlugin('../css/DCalendar.css'),
     new UglifyJsPlugin()
   ]
