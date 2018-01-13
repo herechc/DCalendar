@@ -51,18 +51,19 @@
     padding: 10px;
   }
 </style>
-<link rel="stylesheet" href="./static/css/DCalendar.css"></link>
+<link rel="stylesheet" href="../static/css/DCalendar.css"></link>
 
 <body>
   <input type="text" readonly id="demo">
 </body>
 <!--    引入去jquery  -->
-<script src="./static/js/DCalendar.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="../static/js/DCalendar.js"></script>
 <script>
 
   var dc = new DCalendar({
     id: '#demo',
-    type: 'pick',
+    type: 'area',
     name: '区域',
     dataUrl: '../src/js/area.json',
     autoFill:true,

@@ -19,6 +19,17 @@ var calendar = new DCalendar({
 })
 
 ```
+## 效果
+1. time
+
+![](https://github.com/herechc/DCalendar/tree/master/demo/staticSource/date.gif)
+
+2. pcik
+![](https://github.com/herechc/DCalendar/tree/master/demo/staticSource/pick.gif)
+
+3. area
+![](https://github.com/herechc/DCalendar/tree/master/demo/staticSource/area.gif)
+
 
 # todo
 - use for pc and mobile
