@@ -49,7 +49,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanPlugin('static')
+    new CleanPlugin('static'),
     new ExtractTextPlugin('../css/DCalendar.css'),
     new UglifyJsPlugin()
   ]
