@@ -20,18 +20,20 @@ var calendar = new DCalendar({
 
 ```
 ## 效果
-1. time__
+__1. time__
 
 ![](https://github.com/herechc/DCalendar/tree/master/demo/staticSource/date.gif)
 
-2. pcik__
+__2. pcik__
 
 ![](https://github.com/herechc/DCalendar/tree/master/demo/staticSource/pick.gif)
 
-3. area__
+__3. area__
 
 ![](https://github.com/herechc/DCalendar/tree/master/demo/staticSource/area.gif)
 
+__1. 【基础新闻列表】最基本的下拉刷新使用__
 
+![](https://minirefresh.github.io/minirefresh/staticresource/screenshoot/base_default.gif)
 # todo
 - use for pc and mobile
