@@ -19,7 +19,7 @@ var calendar = new DCalendar({
 })
 
 ```
-## 效果
+## effect
 __1. time__
 
 ![](http://oug5mm6ex.bkt.clouddn.com/date.gif)
