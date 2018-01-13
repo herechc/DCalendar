@@ -20,14 +20,16 @@ var calendar = new DCalendar({
 
 ```
 ## 效果
-1. time
+1. time__
 
 ![](https://github.com/herechc/DCalendar/tree/master/demo/staticSource/date.gif)
 
-2. pcik
+2. pcik__
+
 ![](https://github.com/herechc/DCalendar/tree/master/demo/staticSource/pick.gif)
 
-3. area
+3. area__
+
 ![](https://github.com/herechc/DCalendar/tree/master/demo/staticSource/area.gif)
 
 
